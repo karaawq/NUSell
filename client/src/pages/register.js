@@ -21,10 +21,10 @@ export default function Register() {
     setError('');
 
     if (form.password !== form.confirmPassword) {
-      return setError("got typo ah? passwords don't match");
+      return setError("got typo? passwords don't match");
     }
     if (form.password.length < 6) {
-      return setError('too short la.. at least 8 characters');
+      return setError('too short.. at least 8 characters');
     }
 
     setLoading(true);
