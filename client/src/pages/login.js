@@ -34,13 +34,13 @@ export default function Login() {
     <div style={styles.container}>
       <div style={styles.card}>
         <h1 style={styles.logo}>NUSell</h1>
-        <p style={styles.tagline}>Campus Marketplace</p>
+        <p style={styles.tagline}>Campus marketplace</p>
 
         {error && <div style={styles.error}>{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div style={styles.field}>
-            <label style={styles.label}>Email</label>
+            <label style={styles.label}>email</label>
             <input
               style={styles.input}
               type="email"
@@ -53,7 +53,7 @@ export default function Login() {
           </div>
 
           <div style={styles.field}>
-            <label style={styles.label}>Password</label>
+            <label style={styles.label}>password</label>
             <input
               style={styles.input}
               type="password"
@@ -66,12 +66,12 @@ export default function Login() {
           </div>
 
           <button style={styles.button} type="submit" disabled={loading}>
-            {loading ? 'Logging in...' : 'Log In'}
+            {loading ? 'logging in...' : 'log in'}
           </button>
         </form>
 
         <p style={styles.switchText}>
-          Don't have an account? <Link to="/register" style={styles.link}>Sign up</Link>
+          <Link to="/register" style={styles.link}>sign up/register</Link>
         </p>
       </div>
     </div>

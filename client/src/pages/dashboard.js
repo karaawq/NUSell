@@ -24,32 +24,19 @@ export default function Dashboard() {
             {user?.username?.[0]?.toUpperCase()}
           </div>
           <div>
-            <h2 style={styles.welcomeText}>welcome, {user?.username}! 👋</h2>
-            <p style={styles.emailText}>{user?.email}</p>
+            <h2 style={styles.welcomeText}>welcome, {user?.username}! </h2>
+            <p style={styles.emailText}>{user?.telegram}</p>
           </div>
         </div>
 
         <div style={styles.statsRow}>
           <div style={styles.statCard}>
-            <div style={styles.statNumber}>{user?.points ?? 0}</div>
-            <div style={styles.statLabel}>Points</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statNumber}>0</div>
-            <div style={styles.statLabel}>Listings</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statNumber}>0</div>
-            <div style={styles.statLabel}>Transactions</div>
+            <div style={styles.statLabel}> 0 points</div>
+            <div style={styles.statLabel}> 0 listings</div>
+            <div style={styles.statLabel}> 0 transactions</div>
           </div>
         </div>
 
-        {user?.telegram && (
-          <div style={styles.infoCard}>
-            <span style={styles.infoLabel}>Telegram:</span>
-            <span>{user.telegram}</span>
-          </div>
-        )}
 
       </div>
     </div>
@@ -79,14 +66,14 @@ const styles = {
     fontSize: '1.8rem', fontWeight: 'bold', flexShrink: 0
   },
   welcomeText: { margin: 0, fontSize: '1.4rem', color: '#1a1a6e' },
-  emailText: { margin: '4px 0 0', color: '#888' },
+  emailText: { margin: '4px 0 0' },
   statsRow: { display: 'flex', gap: '16px', marginBottom: '24px' },
   statCard: {
     flex: 1, background: 'white', borderRadius: '12px', padding: '20px',
-    textAlign: 'center', boxShadow: '0 2px 12px rgba(0,0,0,0.08)'
+    textAlign: 'left', boxShadow: '0 2px 12px rgba(0,0,0,0.08)'
   },
   statNumber: { fontSize: '2rem', fontWeight: 'bold', color: '#1a1a6e' },
-  statLabel: { color: '#888', marginTop: '4px' },
+  statLabel: { marginTop: '4px' },
   infoCard: {
     background: 'white', borderRadius: '12px', padding: '16px 20px',
     marginBottom: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.08)'

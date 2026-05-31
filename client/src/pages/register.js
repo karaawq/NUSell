@@ -49,48 +49,48 @@ export default function Register() {
       <div style={styles.card}>
         <h1 style={styles.logo}>NUSell</h1>
 
-        <h2 style={styles.heading}>Create an account</h2>
+        <h2 style={styles.heading}>create an account</h2>
 
         {error && <div style={styles.error}>{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div style={styles.field}>
-            <label style={styles.label}>Username</label>
+            <label style={styles.label}>username</label>
             <input style={styles.input} name="username" value={form.username}
               onChange={handleChange} placeholder="johnpork" required />
           </div>
 
           <div style={styles.field}>
-            <label style={styles.label}>NUS Email</label>
+            <label style={styles.label}>NUS email</label>
             <input style={styles.input} type="email" name="email" value={form.email}
               onChange={handleChange} placeholder="e0123456@u.nus.edu" required />
           </div>
 
           <div style={styles.field}>
-            <label style={styles.label}>Telegram Handle</label>
+            <label style={styles.label}>telegram handle</label>
             <input style={styles.input} name="telegram" value={form.telegram}
               onChange={handleChange} placeholder="@realjohnpork" />
           </div>
 
           <div style={styles.field}>
-            <label style={styles.label}>Password</label>
+            <label style={styles.label}>password</label>
             <input style={styles.input} type="password" name="password" value={form.password}
                 onChange={handleChange} placeholder="Minimum 8 characters"/>
           </div>
 
           <div style={styles.field}>
-            <label style={styles.label}>Confirm Password</label>
+            <label style={styles.label}>confirm password</label>
             <input style={styles.input} type="password" name="confirmPassword"
               value={form.confirmPassword} onChange={handleChange} placeholder="••••••••" required />
           </div>
 
           <button style={styles.button} type="submit" disabled={loading}>
-            {loading ? 'Creating account...' : 'Create Account'}
+            {loading ? 'creating account...' : 'create account'}
           </button>
         </form>
 
         <p style={styles.switchText}>
-          Already have an account? <Link to="/login" style={styles.link}>Log in</Link>
+          <Link to="/login" style={styles.link}>back to log in</Link>
         </p>
       </div>
     </div>
