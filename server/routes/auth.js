@@ -1,9 +1,9 @@
 const express = require('express');
-const router  = express.Router();
-const bcrypt  = require('bcryptjs');
-const jwt     = require('jsonwebtoken');
-const User    = require('../models/user');
-const auth    = require('../middleware/auth');
+const router = express.Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const auth = require('../middleware/auth');
 
 // REGISTER
 router.post('/register', async (req, res) => {
@@ -15,8 +15,8 @@ router.post('/register', async (req, res) => {
     const exists = await User.findOne({ $or: [{ email }, { username }] });
     if (exists)
       return res.status(400).json({
-        message: exists.email === email ? 'Email already in use' : 'Username already taken',
-      });
+      message: exists.email === email ? 'Email already in use' : 'Username already taken',
+    });
 
     const hashed = await bcrypt.hash(password, 12);
     const user   = await User.create({ username, email, password: hashed, telegram: telegram || '' });
