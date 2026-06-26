@@ -30,6 +30,8 @@ import { AuthProvider, useAuth } from './AuthContext';
 import Login from './pages/login';
 import Register from './pages/register';
 import Dashboard from './pages/dashboard';
+import CreateListing from './pages/CreateListing';
+import ListingDetail from './pages/ListingDetail';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -44,9 +46,10 @@ function AppRoutes() {
       <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/dashboard" element={
-        <PrivateRoute><Dashboard /></PrivateRoute>
-      } />
+      <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+      <Route path="/listing/new" element={<PrivateRoute><CreateListing /></PrivateRoute>} />
+      <Route path="/listing/:id" element={<PrivateRoute><ListingDetail /></PrivateRoute>} />
+      <Route path="/listing/:id/edit" element={<PrivateRoute><CreateListing /></PrivateRoute>} />
     </Routes>
   );
 }
