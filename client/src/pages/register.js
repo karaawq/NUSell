@@ -33,7 +33,7 @@ export default function Register() {
         <div className="ns-auth-logo">
           <div className="ns-auth-logo-icon">🛍</div>
           <h1>NU<span style={{ color: 'var(--c-primary)' }}>Sell</span></h1>
-          <p>NUS's student marketplace you can trust</p>
+          <p>NUS's student marketplace</p>
         </div>
 
         <div className="ns-card">
@@ -70,7 +70,7 @@ export default function Register() {
               <label className="ns-label">Telegram Handle</label>
               <div className="ns-input-prefix">
                 <span className="ns-prefix">@</span>
-                <input className="ns-input" type="text" value={form.telegram} onChange={e => setForm(f => ({ ...f, telegram: e.target.value.replace(/^@/, '') }))} placeholder="@realjohnpork" />
+                <input className="ns-input" type="text" value={form.telegram} onChange={e => setForm(f => ({ ...f, telegram: e.target.value.replace(/^@/, '') }))} placeholder="realjohnpork" />
               </div>
               <p className="ns-hint">Buyers will contact you via Telegram to arrange meetups</p>
             </div>
