@@ -33,7 +33,7 @@ export default function Login() {
         <div className="ns-auth-logo">
           <div className="ns-auth-logo-icon">🛍</div>
           <h1>NU<span style={{ color: 'var(--c-primary)' }}>Sell</span></h1>
-          <p>NUS's student marketplacet</p>
+          <p>NUS's student marketplace</p>
         </div>
 
         <div className="ns-card">
