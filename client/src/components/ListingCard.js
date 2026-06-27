@@ -4,14 +4,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const CONDITION_BADGE = {
-  'new':      'ns-badge-new',
-  'like-new': 'ns-badge-like-new',
-  'good':     'ns-badge-good',
-  'fair':     'ns-badge-fair',
+  'new': 'ns-badge-new', 'like-new': 'ns-badge-like-new', 'good': 'ns-badge-good', 'fair': 'ns-badge-fair',
 };
 const CONDITION_LABEL = {
   'new': 'Brand New', 'like-new': 'Like New', 'good': 'Good', 'fair': 'Fair',
 };
+
+//for if user doesnt put any image
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=600&h=400&fit=crop&auto=format';
 
 export default function ListingCard({ listing }) {
@@ -19,7 +18,7 @@ export default function ListingCard({ listing }) {
     <Link to={`/listing/${listing._id}`} className="ns-listing-card">
       <div className="ns-listing-img">
         <img
-          src={listing.imageUrl || FALLBACK_IMG}
+          src={listing.imageUrl || FALLBACK_IMG} //if user no image use above image
           alt={listing.title}
           onError={e => { e.target.src = FALLBACK_IMG; }}
         />
