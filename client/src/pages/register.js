@@ -1,40 +1,23 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import api from '../api';
 import { useAuth } from '../AuthContext';
+import api from '../api';
 
 export default function Register() {
-  const [form, setForm] = useState({
-    username: '', email: '', password: '', confirmPassword: '', telegram: ''
-  });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
-  const navigate = useNavigate();
+  const navigate  = useNavigate();
+  const [form,    setForm]  = useState({ username: '', email: '', password: '', telegram: '' });
+  const [error,   setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const set = key => e => setForm(f => ({ ...f, [key]: e.target.value }));
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    setError('');
-
-    if (form.password !== form.confirmPassword) {
-      return setError("got typo? passwords don't match");
-    }
-    if (form.password.length < 6) {
-      return setError('too short.. at least 8 characters');
-    }
-
-    setLoading(true);
+    setError(''); setLoading(true);
     try {
-      const res = await api.post('/auth/register', {
-        username: form.username,
-        email: form.email,
-        password: form.password,
-        telegram: form.telegram
-      });
+      const payload = { ...form, telegram: form.telegram.replace(/^@/, '') };
+      const res = await api.post('/auth/register', payload);
       login(res.data.token, res.data.user);
       navigate('/dashboard');
     } catch (err) {
@@ -45,84 +28,63 @@ export default function Register() {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.logo}>NUSell</h1>
+    <div className="ns-auth-page">
+      <div className="ns-auth-box">
+        <div className="ns-auth-logo">
+          <div className="ns-auth-logo-icon">🛍</div>
+          <h1>NU<span style={{ color: 'var(--c-primary)' }}>Sell</span></h1>
+          <p>NUS's student marketplace you can trust</p>
+        </div>
 
-        <h2 style={styles.heading}>create an account</h2>
-
-        {error && <div style={styles.error}>{error}</div>}
-
-        <form onSubmit={handleSubmit}>
-          <div style={styles.field}>
-            <label style={styles.label}>username</label>
-            <input style={styles.input} name="username" value={form.username}
-              onChange={handleChange} placeholder="johnpork" required />
+        <div className="ns-card">
+          <div className="ns-auth-tabs">
+            <Link to="/login" className="ns-auth-tab" style={{ textDecoration: 'none' }}>Log In</Link>
+            <button className="ns-auth-tab active">Create Account</button>
           </div>
 
-          <div style={styles.field}>
-            <label style={styles.label}>NUS email</label>
-            <input style={styles.input} type="email" name="email" value={form.email}
-              onChange={handleChange} placeholder="e0123456@u.nus.edu" required />
+          <form className="ns-auth-form" onSubmit={handleSubmit}>
+            {error && (
+              <div className="ns-error">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                {error}
+              </div>
+            )}
+
+            <div className="ns-form-group">
+              <label className="ns-label">Username</label>
+              <input className="ns-input" type="text" value={form.username} onChange={set('username')} placeholder="e.g. dequaviouspork" required minLength={6} />
+              <p className="ns-hint">Minimum 6 characters</p>
+            </div>
+
+            <div className="ns-form-group">
+              <label className="ns-label">Email</label>
+              <input className="ns-input" type="email" value={form.email} onChange={set('email')} placeholder="e1234567@u.nus.edu" required />
+            </div>
+
+            <div className="ns-form-group">
+              <label className="ns-label">Password</label>
+              <input className="ns-input" type="password" value={form.password} onChange={set('password')} placeholder="Min. 8 characters" required minLength={8} />
+            </div>
+
+            <div className="ns-form-group">
+              <label className="ns-label">Telegram Handle</label>
+              <div className="ns-input-prefix">
+                <span className="ns-prefix">@</span>
+                <input className="ns-input" type="text" value={form.telegram} onChange={e => setForm(f => ({ ...f, telegram: e.target.value.replace(/^@/, '') }))} placeholder="@realjohnpork" />
+              </div>
+              <p className="ns-hint">Buyers will contact you via Telegram to arrange meetups</p>
+            </div>
+
+            <button className="ns-btn ns-btn-primary ns-btn-full" type="submit" disabled={loading}>
+              {loading ? 'Creating account…' : 'Create Account'}
+            </button>
+          </form>
+
+          <div className="ns-auth-switch">
+            Already have an account? <Link to="/login">Log in</Link>
           </div>
-
-          <div style={styles.field}>
-            <label style={styles.label}>telegram handle</label>
-            <input style={styles.input} name="telegram" value={form.telegram}
-              onChange={handleChange} placeholder="@realjohnpork" />
-          </div>
-
-          <div style={styles.field}>
-            <label style={styles.label}>password</label>
-            <input style={styles.input} type="password" name="password" value={form.password}
-                onChange={handleChange} placeholder="Minimum 8 characters"/>
-          </div>
-
-          <div style={styles.field}>
-            <label style={styles.label}>confirm password</label>
-            <input style={styles.input} type="password" name="confirmPassword"
-              value={form.confirmPassword} onChange={handleChange} placeholder="••••••••" required />
-          </div>
-
-          <button style={styles.button} type="submit" disabled={loading}>
-            {loading ? 'creating account...' : 'create account'}
-          </button>
-        </form>
-
-        <p style={styles.switchText}>
-          <Link to="/login" style={styles.link}>back to log in</Link>
-        </p>
+        </div>
       </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    minHeight: '100vh', display: 'flex', alignItems: 'center',
-    justifyContent: 'center', background: '#f0f2f5', fontFamily: 'sans-serif'
-  },
-  card: {
-    background: 'white', padding: '40px', borderRadius: '16px',
-    boxShadow: '0 4px 24px rgba(0,0,0,0.1)', width: '100%', maxWidth: '420px'
-  },
-  logo: { color: '#1a1a6e', margin: 0, fontSize: '2.5rem' },
-  tagline: { color: '#888', marginTop: '4px', marginBottom: '28px' },
-  heading: { fontSize: '1.4rem', marginBottom: '20px', color: '#222' },
-  field: { marginBottom: '16px' },
-  label: { display: 'block', marginBottom: '6px', color: '#555', fontSize: '0.9rem' },
-  input: {
-    width: '100%', padding: '10px 12px', borderRadius: '8px',
-    border: '1px solid #ddd', fontSize: '1rem', boxSizing: 'border-box'
-  },
-  button: {
-    width: '100%', padding: '12px', background: '#1a1a6e', color: 'white',
-    border: 'none', borderRadius: '8px', fontSize: '1rem', cursor: 'pointer', marginTop: '8px'
-  },
-  error: {
-    background: '#fff0f0', border: '1px solid #ffcccc', color: '#cc0000',
-    padding: '10px 14px', borderRadius: '8px', marginBottom: '16px', fontSize: '0.9rem'
-  },
-  switchText: { textAlign: 'center', marginTop: '20px', color: '#666' },
-  link: { color: '#1a1a6e', fontWeight: 'bold' }
-};

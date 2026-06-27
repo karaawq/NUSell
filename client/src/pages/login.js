@@ -1,24 +1,21 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import api from '../api';
 import { useAuth } from '../AuthContext';
+import api from '../api';
 
 export default function Login() {
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
-  const navigate = useNavigate();
+  const navigate  = useNavigate();
+  const [form,    setForm]  = useState({ email: '', password: '' });
+  const [error,   setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPw,  setShowPw] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const set = key => e => setForm(f => ({ ...f, [key]: e.target.value }));
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    setError('');
-    setLoading(true);
-
+    setError(''); setLoading(true);
     try {
       const res = await api.post('/auth/login', form);
       login(res.data.token, res.data.user);
@@ -31,88 +28,53 @@ export default function Login() {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.logo}>NUSell</h1>
-        <p style={styles.tagline}>Campus marketplace</p>
+    <div className="ns-auth-page">
+      <div className="ns-auth-box">
+        <div className="ns-auth-logo">
+          <div className="ns-auth-logo-icon">🛍</div>
+          <h1>NU<span style={{ color: 'var(--c-primary)' }}>Sell</span></h1>
+          <p>NUS's student marketplace you can trust</p>
+        </div>
 
-        {error && <div style={styles.error}>{error}</div>}
-
-        <form onSubmit={handleSubmit}>
-          <div style={styles.field}>
-            <label style={styles.label}>email</label>
-            <input
-              style={styles.input}
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="e0123456@u.nus.edu"
-              required
-            />
+        <div className="ns-card">
+          <div className="ns-auth-tabs">
+            <button className="ns-auth-tab active">Log In</button>
+            <Link to="/register" className="ns-auth-tab" style={{ textDecoration: 'none' }}>Create Account</Link>
           </div>
 
-          <div style={styles.field}>
-            <label style={styles.label}>password</label>
-            <input
-              style={styles.input}
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              required
-            />
+          <form className="ns-auth-form" onSubmit={handleSubmit}>
+            {error && (
+              <div className="ns-error">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                {error}
+              </div>
+            )}
+
+            <div className="ns-form-group">
+              <label className="ns-label">Email</label>
+              <input className="ns-input" type="email" value={form.email} onChange={set('email')} placeholder="e1234567@u.nus.edu" required />
+            </div>
+
+            <div className="ns-form-group">
+              <label className="ns-label">Password</label>
+              <div style={{ position: 'relative' }}>
+                <input className="ns-input" type={showPw ? 'text' : 'password'} value={form.password} onChange={set('password')} placeholder="••••••••" required style={{ paddingRight: '40px' }} />
+                <button type="button" onClick={() => setShowPw(s => !s)} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--c-muted)', padding: '4px' }}>
+                  {showPw ? '🙈' : '👁️'}
+                </button>
+              </div>
+            </div>
+
+            <button className="ns-btn ns-btn-primary ns-btn-full" type="submit" disabled={loading}>
+              {loading ? 'Logging in…' : 'Log In'}
+            </button>
+          </form>
+
+          <div className="ns-auth-switch">
+            Don't have an account? <Link to="/register">Create one</Link>
           </div>
-
-          <button style={styles.button} type="submit" disabled={loading}>
-            {loading ? 'logging in...' : 'log in'}
-          </button>
-        </form>
-
-        <p style={styles.switchText}>
-          <Link to="/register" style={styles.link}>sign up/register</Link>
-        </p>
+        </div>
       </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: '#f0f2f5',
-    fontFamily: 'sans-serif'
-  },
-  card: {
-    background: 'white',
-    padding: '40px',
-    borderRadius: '16px',
-    boxShadow: '0 4px 24px rgba(0,0,0,0.1)',
-    width: '100%',
-    maxWidth: '420px'
-  },
-  logo: { color: '#1a1a6e', margin: 0, fontSize: '2.5rem' },
-  tagline: { color: '#888', marginTop: '4px', marginBottom: '28px' },
-  heading: { fontSize: '1.4rem', marginBottom: '20px', color: '#222' },
-  field: { marginBottom: '16px' },
-  label: { display: 'block', marginBottom: '6px', color: '#555', fontSize: '0.9rem' },
-  input: {
-    width: '100%', padding: '10px 12px', borderRadius: '8px',
-    border: '1px solid #ddd', fontSize: '1rem', boxSizing: 'border-box'
-  },
-  button: {
-    width: '100%', padding: '12px', background: '#1a1a6e', color: 'white',
-    border: 'none', borderRadius: '8px', fontSize: '1rem', cursor: 'pointer',
-    marginTop: '8px'
-  },
-  error: {
-    background: '#fff0f0', border: '1px solid #ffcccc', color: '#cc0000',
-    padding: '10px 14px', borderRadius: '8px', marginBottom: '16px', fontSize: '0.9rem'
-  },
-  switchText: { textAlign: 'center', marginTop: '20px', color: '#666' },
-  link: { color: '#1a1a6e', fontWeight: 'bold' }
-};
