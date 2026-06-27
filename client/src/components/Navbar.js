@@ -15,8 +15,8 @@ export default function Navbar() {
     <nav className="ns-navbar">
         <div className="ns-container ns-navbar-inner">
             <Link to="/dashboard" className="ns-logo">
-                <div className="ns-logo-icon">🛍</div>
-                NU<span className="ns-logo-sell">Sell</span>
+                <div className="ns-logo-icon">🛍</div> {/* add logo here in future */}
+                <span>NU<span className="ns-logo-sell">Sell</span></span> {/* changed so that no more gap in logo */}
             </Link>
 
             <div className="ns-navbar-actions" style={{ display: menuOpen ? 'none' : 'flex' }}>
