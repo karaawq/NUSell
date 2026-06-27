@@ -16,7 +16,7 @@ export default function Navbar() {
         <div className="ns-container ns-navbar-inner">
             <Link to="/dashboard" className="ns-logo">
                 <div className="ns-logo-icon">🛍</div>
-                NU<span className="ns-logo-sell">Sell</span>
+                <span className="ns-logo-sell">NUSell</span>
             </Link>
 
             <div className="ns-navbar-actions" style={{ display: menuOpen ? 'none' : 'flex' }}>

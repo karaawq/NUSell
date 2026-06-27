@@ -73,6 +73,7 @@ export default function Login() {
           <div className="ns-auth-switch">
             Don't have an account? <Link to="/register">Create one</Link>
           </div>
+
         </div>
       </div>
     </div>

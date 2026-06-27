@@ -151,7 +151,7 @@ img { display: block; }
 .ns-auth-form { padding: 1.5rem; }
 .ns-demo-hint { text-align: center; font-size: 0.75rem; color: var(--c-muted); margin-top: 0.75rem; }
 .ns-demo-hint code { background: var(--c-muted-bg); padding: 1px 5px; border-radius: 4px; font-size: 0.7rem; }
-.ns-auth-switch { text-align: center; font-size: 0.875rem; color: var(--c-muted); margin-top: 1rem; }
+.ns-auth-switch { text-align: center; font-size: 0.875rem; color: var(--c-muted); margin-top: 1rem; padding-bottom: 1.5rem; }
 .ns-auth-switch a { color: var(--c-primary); font-weight: 500; }
 
 /* navbar */
