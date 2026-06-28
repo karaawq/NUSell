@@ -32,6 +32,7 @@ import Register from './pages/register';
 import Dashboard from './pages/dashboard';
 import CreateListing from './pages/CreateListing';
 import ListingDetail from './pages/ListingDetail';
+import Profile from './pages/Profile';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -50,6 +51,7 @@ function AppRoutes() {
       <Route path="/listing/new" element={<PrivateRoute><CreateListing /></PrivateRoute>} />
       <Route path="/listing/:id" element={<PrivateRoute><ListingDetail /></PrivateRoute>} />
       <Route path="/listing/:id/edit" element={<PrivateRoute><CreateListing /></PrivateRoute>} />
+      <Route path="/profile/:id" element={<PrivateRoute><Profile /></PrivateRoute>} />
     </Routes>
   );
 }

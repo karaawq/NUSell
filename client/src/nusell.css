@@ -363,3 +363,14 @@ img { display: block; }
   .ns-container { padding: 0 1rem; }
   .ns-listings-grid { grid-template-columns: 1fr 1fr; }
 }
+
+
+/* profile page */
+.ns-profile-banner { height: 96px; background: var(--c-primary); border-radius: var(--radius-xl) var(--radius-xl) 0 0; }
+.ns-profile-body { padding: 0 1.5rem 1.5rem; }
+.ns-profile-top { display: flex; align-items: flex-end; justify-content: space-between; margin-top: -44px; margin-bottom: 1rem; }
+.ns-profile-stats { display: flex; gap: 2rem; margin-top: 1rem; }
+.ns-stat { text-align: center; }
+.ns-stat-val { font-size: 1.75rem; font-weight: 700; color: var(--c-primary); line-height: 1; }
+.ns-stat-label { font-size: 0.75rem; color: var(--c-muted); margin-top: 3px; }
+
