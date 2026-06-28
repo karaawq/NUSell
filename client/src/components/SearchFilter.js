@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 
 const CATEGORIES = ['Electronics','Books & Notes','Clothing & Accessories','Furniture','Sports & Fitness','Kitchen & Home','Beauty & Personal Care','Others'];
-const CONDITIONS  = [{ value: 'new', label: 'Brand New' },{ value: 'like-new', label: 'Like New' },{ value: 'good', label: 'Good' },{ value: 'fair', label: 'Fair' }];
-const LOCATIONS   = ['UTown','Science','Engineering','Arts & Social Science','Business','Computing','Medicine','Law','Clementi','Jurong East','Orchard','Novena','Online / Others'];
+const CONDITIONS = [{ value: 'new', label: 'Brand New' },{ value: 'like-new', label: 'Like New' },{ value: 'good', label: 'Good' },{ value: 'fair', label: 'Fair' }];
+const LOCATIONS = ['UTown','Science','Engineering','Arts & Social Science','Business','Computing','Medicine','Law','Clementi','Jurong East','Orchard','Novena','Online / Others'];
 
 export const defaultFilters = { search: '', categories: [], minPrice: '', maxPrice: '', conditions: [], location: '' };
 
@@ -75,7 +75,7 @@ export default function SearchFilter({ filters, onChange }) {
 
   return (
     <>
-      <div className="ns-mobile-filter-btn">
+      <div className="ns-mobile-filter-btn"> {/* for mobile view */}
         <button className={`ns-btn ${hasActive ? 'ns-btn-primary' : 'ns-btn-secondary'}`} onClick={() => setMobileOpen(o => !o)}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
           Filters {hasActive ? `(${filters.categories.length + filters.conditions.length + (filters.location ? 1 : 0)})` : ''}

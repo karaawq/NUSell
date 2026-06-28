@@ -23,9 +23,23 @@ router.get('/', auth, async (req, res) => {
         const listings = await Listing.find(filter).populate('seller', SELLER_FIELDS).sort({ createdAt: -1 });
         res.json(listings);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+// GET /api/listings/user/:userId listings from specific user
+router.get('/user/:userId', auth, async (req, res) => {
+    try {
+        const listings = await Listing.find({ seller: req.params.userId, isActive: true })
+            .populate('seller', SELLER_FIELDS)
+            .sort({ createdAt: -1 });
+        res.json(listings);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+  });
 
 // POST /api/listings
 router.post('/', auth, async (req, res) => {
@@ -42,9 +56,12 @@ router.post('/', auth, async (req, res) => {
     await listing.populate('seller', SELLER_FIELDS);
     res.status(201).json(listing);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+
 
 // GET /api/listings/:id - for indiv listing
 router.get('/:id', auth, async (req, res) => {
