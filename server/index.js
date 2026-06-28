@@ -7,7 +7,7 @@ const app = express();
 
 // MIDDLEWARE
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: process.env.CLIENT_URL || 'http://localhost:3000', //allows req from both local and deployed client
   credentials: true
 }));
 app.use(express.json()); 

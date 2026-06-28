@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api'
-});
+  baseURL: (process.env.REACT_APP_API_URL || '') +'/api'
+}); //if url empty it js goes back to /api (if running locally)
 
 // auto-attach jwt tokwn to every request?
 api.interceptors.request.use((config) => {
