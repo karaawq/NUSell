@@ -11,7 +11,7 @@ const CONDITION_LABEL = {
 };
 
 //for if user doesnt put any image
-const FALLBACK_IMG = 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=600&h=400&fit=crop&auto=format';
+const FALLBACK_IMG = 'https://media.tenor.com/OeGnPBoP_gUAAAAe/monkey-thinking.png';
 
 export default function ListingCard({ listing }) {
   return (
