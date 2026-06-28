@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const auth = require('../middleware/auth');
 
-// REGISTER
+// REGISTER POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
     const { username, email, password, telegram } = req.body;
@@ -32,7 +32,7 @@ router.post('/register', async (req, res) => {
     } 
 });
 
-// LOGIN
+// LOGIN POST /api/auth/login
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -53,7 +53,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// GET USER
+// GET USER /api/auth/me
 router.get('/me', auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
@@ -62,6 +62,18 @@ router.get('/me', auth, async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// GET USER BY ID /api/auth/users/:id
+router.get('/users/:id', auth, async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id).select('username telegram points');
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      res.json(user);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Server error' });
     }
 });
 
