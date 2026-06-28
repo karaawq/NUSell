@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar';
 
 const COND_LABEL = { 'new': 'Brand New', 'like-new': 'Like New', 'good': 'Good', 'fair': 'Fair' };
 const COND_CLS = { 'new': 'ns-badge-new', 'like-new': 'ns-badge-like-new', 'good': 'ns-badge-good', 'fair': 'ns-badge-fair' };
-const FALLBACK = 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800&h=450&fit=crop&auto=format';
+const FALLBACK = 'https://media.tenor.com/OeGnPBoP_gUAAAAe/monkey-thinking.png';
 
 export default function ListingDetail() {
   const { id } = useParams();
