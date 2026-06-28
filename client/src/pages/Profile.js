@@ -12,11 +12,12 @@ import ListingCard from '../components/ListingCard';
 export default function Profile() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user , updateUser} = useAuth();
 
   const [profileUser, setProfileUser] = useState(null);
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showEdit, setShowEdit] = useState(false);
 
   const isOwn = user?._id === id;
 
@@ -32,6 +33,11 @@ export default function Profile() {
       .catch(() => navigate('/dashboard'))
       .finally(() => setLoading(false));
   }, [id, navigate]);
+  
+  const handleSave = (updatedUser) => {
+    setProfileUser(prev => ({ ...prev, ...updatedUser }));
+    updateUser(updatedUser); // keeps Navbar username in sync
+  };
 
   if (loading) {
     return <div className="ns-page"><Navbar /><div className="ns-loading">Loading…</div></div>;
@@ -43,6 +49,15 @@ export default function Profile() {
   return (
     <div className="ns-page">
       <Navbar />
+
+      {showEdit && (
+        <EditProfileModal
+          profileUser={profileUser}
+          onClose={() => setShowEdit(false)}
+          onSave={handleSave}
+        />
+      )}
+
       <div className="ns-container" style={{ paddingTop: '1.5rem', paddingBottom: '3rem' }}>
         <button className="ns-back" onClick={() => navigate(-1)}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
@@ -58,10 +73,10 @@ export default function Profile() {
                 {profileUser.username?.[0]?.toUpperCase()}
               </div>
               {isOwn && (
-                <a href={`https://t.me/${profileUser.telegram}`} target="_blank" rel="noopener noreferrer"
-                  className="ns-btn ns-btn-secondary ns-btn-sm">
+                <button className="ns-btn ns-btn-secondary ns-btn-sm" onClick={() => setShowEdit(true)}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                   Edit Profile ↗
-                </a>
+                </button>
               )}
             </div>
 
@@ -103,4 +118,109 @@ export default function Profile() {
       </div>
     </div>
   );
+}
+
+function EditProfileModal({profileUser, onClose, onSave}) {
+    const [form, setForm] = useState({ username: profileUser.username, telegram: profileUser.telegram || '' });
+    const [error, setError] = useState('');
+    const [saving, setSaving] = useState(false);
+    const [success, setSuccess] = useState(false);
+  
+    const set = key => e => setForm(f => ({ ...f, [key]: e.target.value }));
+  
+    const handleSubmit = async e => {
+      e.preventDefault();
+      setError('');
+      if (form.username.trim().length < 6) { setError('Username must be at least 6 characters.'); return; }
+  
+      setSaving(true);
+      try {
+        const res = await api.put('/auth/me', {
+          username: form.username.trim(),
+          telegram: form.telegram.replace(/^@/, '').trim(),
+        });
+        setSuccess(true);
+        onSave(res.data);
+        setTimeout(onClose, 900);
+      } catch (err) {
+        setError(err.response?.data?.message || 'Failed to save changes');
+      } finally {
+        setSaving(false);
+      }
+    };
+  
+    return (
+      <div
+        onClick={onClose}
+        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+      >
+        <div
+          onClick={e => e.stopPropagation()}
+          style={{ background: 'var(--c-card)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--c-border)', width: '100%', maxWidth: 420, boxShadow: 'var(--shadow-lg)' }}
+        >
+          {/* header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--c-border)' }}>
+            <h3 style={{ fontSize: '1.125rem', margin: 0 }}>Edit Profile</h3>
+            <button onClick={onClose} className="ns-btn ns-btn-ghost" style={{ padding: '6px' }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+  
+          {/* body */}
+          <form onSubmit={handleSubmit} style={{ padding: '1.5rem' }}>
+            {error && (
+              <div className="ns-error">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                {error}
+              </div>
+            )}
+  
+            {success && (
+              <div className="ns-success-msg" style={{ marginBottom: '1rem' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 20 4 10"/></svg>
+                Profile updated!
+              </div>
+            )}
+  
+            <div className="ns-form-group">
+              <label className="ns-label">Username</label>
+              <input
+                className="ns-input"
+                type="text"
+                value={form.username}
+                onChange={set('username')}
+                minLength={6}
+                required
+                placeholder="e.g. johndoe99"
+              />
+              <p className="ns-hint">Minimum 6 characters</p>
+            </div>
+  
+            <div className="ns-form-group">
+              <label className="ns-label">Telegram Handle</label>
+              <div className="ns-input-prefix">
+                <span className="ns-prefix">@</span>
+                <input
+                  className="ns-input"
+                  type="text"
+                  value={form.telegram}
+                  onChange={e => setForm(f => ({ ...f, telegram: e.target.value.replace(/^@/, '') }))}
+                  placeholder="yourusername"
+                />
+              </div>
+              <p className="ns-hint">Buyers use this to contact you for meetups</p>
+            </div>
+  
+            <div className="ns-grid-2" style={{ marginTop: '0.5rem' }}>
+              <button type="button" className="ns-btn ns-btn-secondary ns-btn-full" onClick={onClose}>
+                Cancel
+              </button>
+              <button type="submit" className="ns-btn ns-btn-primary ns-btn-full" disabled={saving}>
+                {saving ? 'Saving…' : 'Save Changes'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
 }
