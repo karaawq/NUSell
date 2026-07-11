@@ -10,7 +10,7 @@ export default function Dashboard() {
   const [loading,  setLoading]  = useState(true);
 
   useEffect(() => {
-    api.get('/listings')
+    api.get('/listings?isFree=false')
       .then(res => setListings(res.data))
       .catch(console.error)
       .finally(() => setLoading(false));

@@ -22,14 +22,20 @@ export default function ListingCard({ listing }) {
           alt={listing.title}
           onError={e => { e.target.src = FALLBACK_IMG; }}
         />
-        <span className={`ns-badge ${CONDITION_BADGE[listing.condition]}`}>
-          {CONDITION_LABEL[listing.condition]}
-        </span>
+        {listing.isFree ? 
+            (<span className="ns-giveaway-badge">🎁 Free</span>) : 
+            (<span className={`ns-badge ${CONDITION_BADGE[listing.condition]}`}>
+                {CONDITION_LABEL[listing.condition]}
+            </span>)
+        }
       </div>
       <div className="ns-listing-body">
         <div className="ns-listing-title">{listing.title}</div>
         <div className="ns-listing-price-row">
-          <span className="ns-listing-price">${listing.price}</span>
+          {listing.isFree ? 
+            <span className="ns-free-price">FREE</span> : 
+            <span className="ns-listing-price">${listing.price}</span>
+          }
           <span className="ns-listing-tag">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
             {listing.category}
