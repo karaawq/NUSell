@@ -7,20 +7,26 @@ const SELLER_FIELDS = 'username telegram points';
 // GET /api/listings
 router.get('/', auth, async (req, res) => {
     try {
-        //const filter = { isActive: true };
-        const { search, category, condition, location, minPrice, maxPrice } = req.query;
+        const { search, category, condition, location, minPrice, maxPrice, isFree } = req.query;
         const filter = { isActive: true };
-        if (search)    filter.title     = { $regex: search, $options: 'i' };
-        if (category)  filter.category  = { $in: category.split(',') };
+
+        // separate giveaway from priced listings
+        if (isFree !== undefined) filter.isFree = isFree === 'true';
+
+        if (search) filter.title     = { $regex: search, $options: 'i' };
+        if (category) filter.category  = { $in: category.split(',') };
         if (condition) filter.condition = { $in: condition.split(',') };
-        if (location)  filter.location  = location;
-        if (minPrice || maxPrice) {
-        filter.price = {};
-        if (minPrice) filter.price.$gte = Number(minPrice);
-        if (maxPrice) filter.price.$lte = Number(maxPrice);
+        if (location) filter.location  = location;
+        if (!filter.isFree && (minPrice || maxPrice)) {
+            filter.price = {};
+            if (minPrice) filter.price.$gte = Number(minPrice);
+            if (maxPrice) filter.price.$lte = Number(maxPrice);
         }
 
-        const listings = await Listing.find(filter).populate('seller', SELLER_FIELDS).sort({ createdAt: -1 });
+        const listings = await Listing.find(filter)
+            .populate('seller', SELLER_FIELDS)
+            .sort({ createdAt: -1 });
+
         res.json(listings);
     } catch (err) {
         console.error(err);

@@ -33,6 +33,7 @@ import Dashboard from './pages/dashboard';
 import CreateListing from './pages/CreateListing';
 import ListingDetail from './pages/ListingDetail';
 import Profile from './pages/Profile';
+import Giveaway from './pages/Giveaway';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -48,6 +49,7 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+      <Route path="/giveaway" element={<PrivateRoute><Giveaway /></PrivateRoute>} />
       <Route path="/listing/new" element={<PrivateRoute><CreateListing /></PrivateRoute>} />
       <Route path="/listing/:id" element={<PrivateRoute><ListingDetail /></PrivateRoute>} />
       <Route path="/listing/:id/edit" element={<PrivateRoute><CreateListing /></PrivateRoute>} />
