@@ -56,7 +56,9 @@ router.post('/', auth, async (req, res) => {
     }
     const listing = await Listing.create({
         seller: req.user.id,
-        title, description, price, condition, category, location,
+        title, description, condition, category, location,
+        price: isFree ? 0 : price,
+        isFree: isFree || false,
         imageUrl: imageUrl || '',
     });
     await listing.populate('seller', SELLER_FIELDS);
@@ -93,8 +95,12 @@ router.put('/:id', auth, async (req, res) => {
             return res.status(403).json({ message: 'Dun do that' });
         }
 
-        const { title, description, price, condition, category, location, imageUrl } = req.body;
-        Object.assign(listing, { title, description, price, condition, category, location, imageUrl });
+        const { title, description, price, condition, category, location, imageUrl, isFree } = req.body;
+        Object.assign(listing, { 
+            title, description, condition, category, location, imageUrl, 
+            price: isFree ? 0 : price,
+            isFree: isFree || false
+        });
         await listing.save();
         await listing.populate('seller', SELLER_FIELDS);
         res.json(listing);
