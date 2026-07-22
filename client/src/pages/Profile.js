@@ -224,3 +224,30 @@ function EditProfileModal({profileUser, onClose, onSave}) {
       </div>
     );
 }
+
+//////
+// REP BADGE
+//////
+
+import { BADGE_LEVELS, getBadgeInfo, getLevelFloor } from '../components/ReputationBadge';
+
+// replaces the hardcoded ALL_BADGES array
+const ALL_BADGES = BADGE_LEVELS; // [{ pts, label, icon }, ...]
+ 
+function ProgressBar({ points }) {
+  const badge = getBadgeInfo(points);
+  if (!badge.next) return <p className="ns-text-xs ns-mt-2">Maximum level reached 👑</p>;
+  const floor = getLevelFloor(points);
+  const pct   = Math.min(100, ((points - floor) / (badge.nextAt - floor)) * 100);
+  return (
+    <div className="ns-mt-2">
+      <div className="ns-flex-between ns-text-xs" style={{ marginBottom: 6 }}>
+        <span>{points - floor} / {badge.nextAt - floor} pts to {badge.next}</span>
+        <span>{Math.round(pct)}%</span>
+      </div>
+      <div className="ns-progress-track">
+        <div className="ns-progress-bar" style={{ width: `${pct}%` }} />
+      </div>
+    </div>
+  );
+}
