@@ -1,10 +1,11 @@
-//OLD
 
 const express = require('express');
 const router = express.Router();
 const Listing = require('../models/Listing');
+const User = require('../models/user'); //edited
 const auth = require('../middleware/auth');
 const SELLER_FIELDS = 'username telegram points';
+const ReputationAward = require('../models/ReputationAward'); //new
 
 // GET /api/listings
 router.get('/', auth, async (req, res) => {
@@ -28,6 +29,14 @@ router.get('/', auth, async (req, res) => {
         const listings = await Listing.find(filter)
             .populate('seller', SELLER_FIELDS)
             .sort({ createdAt: -1 });
+                
+        //new: boost listings by seller reputation — higher points float to top
+        listings.sort((a, b) => {
+        const aPts = a.seller?.points || 0;
+        const bPts = b.seller?.points || 0;
+        if (bPts !== aPts) return bPts - aPts;
+        return new Date(b.createdAt) - new Date(a.createdAt);
+        });
 
         res.json(listings);
     } catch (err) {
@@ -74,16 +83,22 @@ router.post('/', auth, async (req, res) => {
 
 
 // GET /api/listings/:id - for indiv listing
+// new: include whether user has reviewed + their star rating
 router.get('/:id', auth, async (req, res) => {
-    try {
-        const listing = await Listing.findById(req.params.id).populate('seller', SELLER_FIELDS);
-        if (!listing || !listing.isActive) {
-            return res.status(404).json({ message: 'Listing not found' });
-        }
-        res.json(listing);
-    } catch (err) {
-        res.status(500).json({ message: 'Server error' });
-    }
+  try {
+    const listing = await Listing.findById(req.params.id).populate('seller', SELLER_FIELDS);
+    if (!listing || !listing.isActive)
+      return res.status(404).json({ message: 'Listing not found' });
+
+    const award = await ReputationAward.findOne({ from: req.user.id, listing: listing._id });
+    res.json({
+      ...listing.toObject(),
+      userHasAwarded: !!award,
+      userAwardStars: award?.stars || null,
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 // PUT /api/listings/:id  — update (seller only)
@@ -130,6 +145,42 @@ router.delete('/:id', auth, async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+//new: POST /api/listings/:id/award — buyer rates seller after transaction
+router.post('/:id/award', auth, async (req, res) => {
+  try {
+    const listing = await Listing.findById(req.params.id);
+    if (!listing) return res.status(404).json({ message: 'Listing not found' });
+    if (listing.seller.toString() === req.user.id)
+      return res.status(400).json({ message: 'Cannot review your own listing' });
+
+    const { stars } = req.body;
+    if (!stars || stars < 1 || stars > 5)
+      return res.status(400).json({ message: 'Stars must be between 1 and 5' });
+
+    const sellerPoints = stars * 10;
+    const buyerPoints  = 10;
+
+    await ReputationAward.create({
+      from: req.user.id, to: listing.seller, listing: listing._id,
+      stars, sellerPoints, buyerPoints,
+    });
+
+    // credit seller
+    await User.findByIdAndUpdate(listing.seller, { $inc: { points: sellerPoints } });
+    // credit buyer
+    const updatedBuyer = await User.findByIdAndUpdate(
+      req.user.id, { $inc: { points: buyerPoints } }, { new: true }
+    ).select('-password');
+
+    res.json({ message: 'Review submitted', sellerPoints, buyerPoints, buyer: updatedBuyer });
+  } catch (err) {
+    if (err.code === 11000)
+      return res.status(400).json({ message: 'You have already reviewed this listing' });
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 
 module.exports = router;
 

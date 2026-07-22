@@ -39,7 +39,7 @@ function StarPicker({ value, onChange }) {
 export default function ListingDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
 
   const [listing,  setListing]  = useState(null);
   const [loading,  setLoading]  = useState(true);
