@@ -12,7 +12,6 @@ router.get('/', auth, async (req, res) => {
     try {
         const { search, category, condition, location, minPrice, maxPrice, isFree } = req.query;
         const filter = { isActive: true };
-g
         // separate giveaway from priced listings
         if (isFree !== undefined) filter.isFree = isFree === 'true';
 
