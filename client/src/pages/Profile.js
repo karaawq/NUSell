@@ -6,6 +6,7 @@ import api from '../api';
 import { useAuth } from '../AuthContext';
 import Navbar from '../components/Navbar';
 import ListingCard from '../components/ListingCard';
+import ReputationBadge, { BADGE_LEVELS, getBadgeInfo, getLevelFloor } from '../components/ReputationBadge';
 
 //badges include in ms3, see what icons we want to put
 
@@ -45,6 +46,8 @@ export default function Profile() {
   if (!profileUser) {
     return null;
   }
+
+  const points = profileUser.points ?? 0; //check schema field name and update accordingly
 
   return (
     <div className="ns-page">
@@ -90,6 +93,36 @@ export default function Profile() {
 
             <div className="ns-profile-stats"> {/* include points in future here */}
               <div className="ns-stat"><div className="ns-stat-val">{listings.length}</div><div className="ns-stat-label">Active listings</div></div>
+              <div className="ns-stat"><div className="ns-stat-val">{points}</div><div className="ns-stat-label">Reputation pts</div></div>           
+            </div>
+
+            {/* Reputation badge + progress bar */}
+            <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--c-border)' }}>
+              <ReputationBadge points={points} showPoints />
+              <ProgressBar points={points} />
+            </div>
+
+            {/* Badges earned showcase */}
+            <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--c-border)' }}>
+              <p className="ns-text-xs" style={{ textTransform: 'uppercase', letterSpacing: '0.05em', opacity: 0.6, marginBottom: 8 }}>
+                Badges Earned
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                {BADGE_LEVELS.map(b => {
+                  const earned = points >= b.pts;
+                  return (
+                    <span
+                      key={b.label}
+                      className={`ns-rep ${b.cls} ns-rep-sm`}
+                      style={{ opacity: earned ? 1 : 0.35 }}
+                      title={earned ? `Earned at ${b.pts} pts` : `Unlocks at ${b.pts} pts`}
+                    >
+                      <span>{b.icon}</span>
+                      <span>{b.label}</span>
+                    </span>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
@@ -229,11 +262,6 @@ function EditProfileModal({profileUser, onClose, onSave}) {
 // REP BADGE
 //////
 
-import { BADGE_LEVELS, getBadgeInfo, getLevelFloor } from '../components/ReputationBadge';
-
-// replaces the hardcoded ALL_BADGES array
-const ALL_BADGES = BADGE_LEVELS; // [{ pts, label, icon }, ...]
- 
 function ProgressBar({ points }) {
   const badge = getBadgeInfo(points);
   if (!badge.next) return <p className="ns-text-xs ns-mt-2">Maximum level reached 👑</p>;

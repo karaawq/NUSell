@@ -278,7 +278,7 @@ img { display: block; }
 .ns-lh { line-height: 1.5; }
 
 
-/* ------ NEW ------*/
+/* ------ MS2 ------*/
 /* hero */
 .ns-hero { background: var(--c-primary); padding: 2.5rem 0; }
 .ns-hero h1 { color: white; font-size: 2rem; margin-bottom: 6px; }
@@ -411,3 +411,44 @@ img { display: block; }
 .ns-free-toggle-text strong { font-size: 0.9rem; display: block; color: #15803d; }
 .ns-free-toggle-text span { font-size: 0.8rem; color: #166534; }
 .ns-giveaway-hero { background: linear-gradient(135deg, #15803d 0%, #166534 100%); }
+
+
+/* ---- MS3 ----- */
+/* rep badge pill */
+.ns-rep {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--c-border);
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--c-card);
+}
+.ns-rep-sm {
+  padding: 3px 9px;
+  font-size: 0.7rem;
+}
+
+/* badge color variants — matches the `cls` field in ReputationBadge.js */
+.ns-rep-newcomer { color: #4b7a5a; border-color: #b7d9c2; background: #eef6f0; }
+.ns-rep-trusted  { color: #2f6fb0; border-color: #b9d6f0; background: #eef5fc; }
+.ns-rep-reliable { color: #7a4fb0; border-color: #dcc9f0; background: #f5eefc; }
+.ns-rep-star     { color: #b5811a; border-color: #f0dca8; background: #fcf6e8; }
+.ns-rep-legend   { color: #b0562f; border-color: #f0c4a8; background: #fcece2; }
+
+/* progress bar */
+.ns-progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--c-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.ns-progress-bar {
+  height: 100%;
+  background: var(--c-primary);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
