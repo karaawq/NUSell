@@ -60,7 +60,7 @@ router.get('/user/:userId', auth, async (req, res) => {
 // POST /api/listings
 router.post('/', auth, async (req, res) => {
   try {
-    const { title, description, price, condition, category, location, imageUrl } = req.body;
+    const { title, description, price, condition, category, location, imageUrl, isFree } = req.body;
     if (!title || !description || price == null || !condition || !category || !location) {
         return res.status(400).json({ message: 'Missing required fields' });
     }
